@@ -1,0 +1,11 @@
+coinbase:
+  ws_url: "wss://ws-feed.pro.coinbase.com"
+  channels: ["ticker", "matches"]
+  pairs: ["BTC-USD", "ETH-USD"]
+
+hazelcast:
+  cluster_name: "adzd-project"
+  cluster_nodes: 
+    - "127.0.0.1:5701"
+    - "127.0.0.1:5702"
+    - "127.0.0.1:5703"

@@ -1,0 +1,69 @@
+version: "3"
+services:
+  app:
+    build: .
+    container_name: docker-app-1
+    depends_on:
+      - hazelcast-1
+      - hazelcast-2
+      - hazelcast-3
+    environment:
+      - HAZELCAST_CLUSTER_NAME=dev
+      - HZ_NETWORK_RESTAPI_ENABLED=true
+      - HZ_JET_ENABLED=false
+    networks:
+      - hazelcast_network
+
+  hazelcast-1:
+    image: hazelcast/hazelcast:latest
+    container_name: hazelcast-1
+    ports:
+      - "5701:5701"
+    environment:
+      - HZ_CLUSTERNAME=dev
+      - HZ_NETWORK_RESTAPI_ENABLED=true
+      - HZ_JET_ENABLED=false
+    networks:
+      - hazelcast_network
+
+  hazelcast-2:
+    image: hazelcast/hazelcast:latest
+    container_name: hazelcast-2
+    ports:
+      - "5702:5701"
+    environment:
+      - HZ_CLUSTERNAME=dev
+      - HZ_NETWORK_RESTAPI_ENABLED=true
+      - HZ_JET_ENABLED=false
+    networks:
+      - hazelcast_network
+
+  hazelcast-3:
+    image: hazelcast/hazelcast:latest
+    container_name: hazelcast-3
+    ports:
+      - "5703:5701"
+    environment:
+      - HZ_CLUSTERNAME=dev
+      - HZ_NETWORK_RESTAPI_ENABLED=true
+      - HZ_JET_ENABLED=false
+    networks:
+      - hazelcast_network
+
+  hazelcast-dashboard:
+    image: hazelcast/management-center:latest
+    container_name: hazelcast-dashboard
+    depends_on:
+      - hazelcast-1
+      - hazelcast-2
+      - hazelcast-3
+    environment:
+      - JAVA_OPTS=-Dhazelcast.mc.http.port=8080
+    ports:
+      - "8080:8080"
+    networks:
+      - hazelcast_network
+
+networks:
+  hazelcast_network:
+    driver: bridge
