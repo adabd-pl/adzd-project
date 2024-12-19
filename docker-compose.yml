@@ -22,7 +22,7 @@ services:
     environment:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
-      - HZ_JET_ENABLED=false
+      - HZ_JET_ENABLED=true
     networks:
       - hazelcast_network
 
@@ -34,7 +34,7 @@ services:
     environment:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
-      - HZ_JET_ENABLED=false
+      - HZ_JET_ENABLED=true
     networks:
       - hazelcast_network
 
@@ -46,7 +46,7 @@ services:
     environment:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
-      - HZ_JET_ENABLED=false
+      - HZ_JET_ENABLED=true
     networks:
       - hazelcast_network
 

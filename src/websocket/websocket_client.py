@@ -6,20 +6,18 @@ from src.hazelcast.hazelcast_cluster import HazelcastCluster
 hazelcast_cluster = HazelcastCluster()
 
 def on_message(ws, message):
-    """Odebranie wiadomości z serwera Coinbase."""
     try:
         data = json.loads(message)
         print("Received:", data)
 
      
-        trade_id = data.get("sequence", int(time.time() * 1000))  # Używamy "sequence" lub timestamp
-        hazelcast_cluster.save_trade(trade_id, data)  # Przesyłanie do Hazelcast IMap
-
+        trade_id = data.get("sequence", int(time.time() * 1000)) 
+        hazelcast_cluster.save_trade(trade_id, data) 
+        
     except json.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
-
+    
 def on_open(ws):
-    """Subskrypcja kanałów ticker dla BTC-USD i ETH-USD."""
     print("Connected to WebSocket, subscribing to channels...")
     subscribe_message = json.dumps({
         "type": "subscribe",
@@ -28,16 +26,13 @@ def on_open(ws):
     ws.send(subscribe_message)
 
 def on_error(ws, error):
-    """Obsługa błędów WebSocket."""
     print(f"WebSocket error: {error}")
 
 def on_close(ws, close_status_code, close_msg):
-    """Obsługa zamknięcia połączenia."""
     print(f"WebSocket closed. Status code: {close_status_code}, message: {close_msg}")
     hazelcast_cluster.close()  # Zamknięcie połączenia z Hazelcastem
 
 def start_websocket():
-    """Uruchom połączenie WebSocket i automatycznie połącz ponownie w razie problemów."""
     while True:
         try:
             print("Starting WebSocket connection...")

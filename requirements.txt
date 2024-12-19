@@ -2,4 +2,3 @@ websocket-client
 requests
 hazelcast-python-client
 pandas
-hazelcast-jet
