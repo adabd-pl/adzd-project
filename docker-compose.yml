@@ -23,6 +23,7 @@ services:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
       - HZ_JET_ENABLED=true
+      - HZ_METRICS_ENABLED=true
     networks:
       - hazelcast_network
 
@@ -35,6 +36,7 @@ services:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
       - HZ_JET_ENABLED=true
+      - HZ_METRICS_ENABLED=true
     networks:
       - hazelcast_network
 
@@ -47,6 +49,7 @@ services:
       - HZ_CLUSTERNAME=dev
       - HZ_NETWORK_RESTAPI_ENABLED=true
       - HZ_JET_ENABLED=true
+      - HZ_METRICS_ENABLED=true
     networks:
       - hazelcast_network
 
@@ -63,6 +66,29 @@ services:
       - "8080:8080"
     networks:
       - hazelcast_network
+
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   volumes:
+  #     - ./src/dashboard/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - hazelcast_network
+
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: grafana
+  #   depends_on:
+  #     - prometheus
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #   networks:
+  #     - hazelcast_network
 
 networks:
   hazelcast_network:

@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: "hazelcast"
+    static_configs:
+    - targets: ['localhost:8080'] # replace this address with the network address of Hazelcast Management Center
+    basic_auth:
+      username: admin
+      password: admin
