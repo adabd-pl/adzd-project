@@ -10,13 +10,37 @@ def on_message(ws, message):
         data = json.loads(message)
         print("Received:", data)
 
-     
-        trade_id = data.get("sequence", int(time.time() * 1000)) 
-        hazelcast_cluster.save_trade(trade_id, data) 
-        
+
+        trade_id = int(data.get("sequence", int(time.time() * 1000)))
+
+        hazelcast_data = {
+            "__key": trade_id,  
+            "type": data.get("type"),
+            "product_id": data.get("product_id"),
+            "price": data.get("price"),
+            "open_24h": data.get("open_24h"),
+            "volume_24h": data.get("volume_24h"),
+            "low_24h": data.get("low_24h"),
+            "high_24h": data.get("high_24h"),
+            "volume_30d": data.get("volume_30d"),
+            "best_bid": data.get("best_bid"),
+            "best_bid_size": data.get("best_bid_size"),
+            "best_ask": data.get("best_ask"),
+            "best_ask_size": data.get("best_ask_size"),
+            "side": data.get("side"),
+            "time": data.get("time"),
+            "trade_id": trade_id,
+            "last_size": data.get("last_size"),
+        }
+
+ 
+        hazelcast_cluster.save_trade(trade_id, data)  
+    
     except json.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
-    
+    except Exception as e:
+        print(f"Error saving trade: {e}")
+
 def on_open(ws):
     print("Connected to WebSocket, subscribing to channels...")
     subscribe_message = json.dumps({
@@ -30,7 +54,7 @@ def on_error(ws, error):
 
 def on_close(ws, close_status_code, close_msg):
     print(f"WebSocket closed. Status code: {close_status_code}, message: {close_msg}")
-    hazelcast_cluster.close()  # Zamknięcie połączenia z Hazelcastem
+    hazelcast_cluster.close() 
 
 def start_websocket():
     while True:
