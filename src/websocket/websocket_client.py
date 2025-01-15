@@ -2,40 +2,31 @@ import websocket
 import json
 import time
 from src.hazelcast.hazelcast_cluster import HazelcastCluster
+from hazelcast.core import HazelcastJsonValue
+from datetime import datetime
 
 hazelcast_cluster = HazelcastCluster()
 
 def on_message(ws, message):
     try:
         data = json.loads(message)
-        print("Received:", data)
-
+        iso_time = data.get("time")
+        print("Received:", iso_time)
+        if iso_time:
+            try:
+                unix_time = int(datetime.fromisoformat(iso_time.replace("Z", "+00:00")).timestamp() * 1000)
+                data["time_unix"] = unix_time
+            except ValueError:
+                print(f"Invalid timestamp format: {iso_time}")
+                data["time_unix"] = None
+        else:
+            data["time_unix"] = None
 
         trade_id = int(data.get("sequence", int(time.time() * 1000)))
-
-        hazelcast_data = {
-            "__key": trade_id,  
-            "type": data.get("type"),
-            "product_id": data.get("product_id"),
-            "price": data.get("price"),
-            "open_24h": data.get("open_24h"),
-            "volume_24h": data.get("volume_24h"),
-            "low_24h": data.get("low_24h"),
-            "high_24h": data.get("high_24h"),
-            "volume_30d": data.get("volume_30d"),
-            "best_bid": data.get("best_bid"),
-            "best_bid_size": data.get("best_bid_size"),
-            "best_ask": data.get("best_ask"),
-            "best_ask_size": data.get("best_ask_size"),
-            "side": data.get("side"),
-            "time": data.get("time"),
-            "trade_id": trade_id,
-            "last_size": data.get("last_size"),
-        }
-
- 
-        hazelcast_cluster.save_trade(trade_id, data)  
-    
+        print(trade_id)
+        
+        hazelcast_cluster.save_trade(str(trade_id), HazelcastJsonValue(data))  
+        
     except json.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
     except Exception as e:
