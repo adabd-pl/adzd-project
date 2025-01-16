@@ -39,3 +39,12 @@ java -jar hazelcast-management-center-5.6.0.jar
 ```bash
 hz start
 ```
+
+## Configuration
+Hazelcast configuration file is stored in: /usr/lib/hazelcast/config/hazelcast.xml (by default user don't have rights to change it)
+
+#### Options:
+- change cluster-name (dev by default)
+- auto-detection - determines if nodes are connecting automatically
+- network - allows to set static IP address for node
+- tcp-ip>members - static list of connections between nodes
