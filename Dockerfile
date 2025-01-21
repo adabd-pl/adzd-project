@@ -11,4 +11,4 @@ COPY . .
 ENV PYTHONPATH="${PYTHONPATH}:/app/src"
 
 
-CMD ["python3", "/app/src/websocket/websocket_client.py"]
+CMD ["python3", "/app/src/hazelcast/main.py"]
