@@ -1,0 +1,7 @@
+hazelcast-client:
+  cluster-name: dev
+  network:
+    cluster-members:
+      - 192.168.160.2:5701
+      - 192.168.160.3:5701
+      - 192.168.160.4:5701
