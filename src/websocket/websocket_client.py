@@ -26,6 +26,12 @@ client = HazelcastClient(
     ]
 )
 
+# Topic dla dużych transakcji
+large_trades_topic = client.get_topic("large_trades")
+
+
+LARGE_TRADE_THRESHOLD = 10000.0  # Wartość transakcji (cena * wolumen > 100000)
+
 # Inicjalizacja Generatora Flake Id
 id_generator = client.get_flake_id_generator("id-generator").blocking()
 
@@ -50,7 +56,7 @@ def process_and_save_aggregated_data(product_id, price, volume):
         }
 
         client.get_map("aggregated_trades").put(product_id, HazelcastJsonValue(json.dumps(record)))
-        print(f"Aggregated data saved for {product_id}: {record}")
+        #print(f"Aggregated data saved for {product_id}: {record}")
 
     except Exception as e:
         print(f"Error processing aggregated data: {e}")
@@ -86,8 +92,9 @@ def on_message(ws, message):
             "side": data.get("side")  # buy/sell
         }
 
-        logger.debug(f"Trade ID: {trade_id}, Data: {record}")
+        #logger.debug(f"Trade ID: {trade_id}, Data: {record}")
 
+        trade_value =  float(data.get("price", 0)) * float(data.get("last_size", 0))
 
         client.get_map("trades").put(str(trade_id), HazelcastJsonValue(json.dumps(record)))
 
@@ -96,6 +103,10 @@ def on_message(ws, message):
             price=record["price"],
             volume=record["volume"]
         )
+
+        if trade_value > LARGE_TRADE_THRESHOLD:
+            large_trades_topic.publish(HazelcastJsonValue(json.dumps(record)))
+            logger.info(f"Large trade published to topic: {record}")
 
     except json.JSONDecodeError as e:
         print(f"JSON Decode Error: {e}")
