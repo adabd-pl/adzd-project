@@ -52,7 +52,7 @@ def on_message(ws, message):
             "side": data.get("side")  # buy/sell
         }
 
-        logger.debug(f"Trade ID: {trade_id}, Data: {record}")
+        #logger.debug(f"Trade ID: {trade_id}, Data: {record}")
 
         trade_value =  float(data.get("price", 0)) * float(data.get("last_size", 0))
 

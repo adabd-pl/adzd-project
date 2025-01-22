@@ -1,9 +1,8 @@
-# topic.py
 from hazelcast.core import HazelcastJsonValue
 
 # Topic dla dużych transakcji
 def get_large_trades_topic(client):
-    return client.get_topic("large_trades")
+    return client.get_topic("topic")
 
 def publish_large_trade(topic, record):
-    topic.publish(HazelcastJsonValue(record))
+    topic.publish(str(record))

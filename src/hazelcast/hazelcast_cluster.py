@@ -15,9 +15,9 @@ def initialize_hazelcast_client():
             }
         },
         cluster_members=[
-            "172.19.0.2:5701",
-            "172.19.0.3:5701",
-            "172.19.0.4:5701"
+            "hazelcast-1",
+            "hazelcast-2",
+            "hazelcast-3"
         ]
     )
     logger.info("Hazelcast client initialized.")

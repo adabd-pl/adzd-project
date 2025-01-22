@@ -24,7 +24,7 @@ def process_and_save_aggregated_data(client, product_id, price, volume):
         }
 
         client.get_map("aggregated_trades").put(product_id, HazelcastJsonValue(json.dumps(record)))
-        print(f"Aggregated data saved for {product_id}: {record}")
+        #print(f"Aggregated data saved for {product_id}: {record}")
 
     except Exception as e:
         print(f"Error processing aggregated data: {e}")
